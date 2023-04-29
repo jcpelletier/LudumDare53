@@ -53,6 +53,15 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""lift"",
+                    ""type"": ""Button"",
+                    ""id"": ""37dab53e-ae80-4b22-b3fb-6d3555fa507b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -154,6 +163,17 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
                     ""action"": ""look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4c093cd-49d8-4768-99ad-9bbf082a28c3"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""lift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -165,6 +185,7 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
         m_gameplay_fire = m_gameplay.FindAction("fire", throwIfNotFound: true);
         m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
         m_gameplay_look = m_gameplay.FindAction("look", throwIfNotFound: true);
+        m_gameplay_lift = m_gameplay.FindAction("lift", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -227,6 +248,7 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_gameplay_fire;
     private readonly InputAction m_gameplay_move;
     private readonly InputAction m_gameplay_look;
+    private readonly InputAction m_gameplay_lift;
     public struct GameplayActions
     {
         private @StarterControls m_Wrapper;
@@ -234,6 +256,7 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
         public InputAction @fire => m_Wrapper.m_gameplay_fire;
         public InputAction @move => m_Wrapper.m_gameplay_move;
         public InputAction @look => m_Wrapper.m_gameplay_look;
+        public InputAction @lift => m_Wrapper.m_gameplay_lift;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -252,6 +275,9 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
                 @look.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
                 @look.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
                 @look.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                @lift.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLift;
+                @lift.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLift;
+                @lift.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLift;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -265,6 +291,9 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
                 @look.started += instance.OnLook;
                 @look.performed += instance.OnLook;
                 @look.canceled += instance.OnLook;
+                @lift.started += instance.OnLift;
+                @lift.performed += instance.OnLift;
+                @lift.canceled += instance.OnLift;
             }
         }
     }
@@ -274,5 +303,6 @@ public partial class @StarterControls : IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnLift(InputAction.CallbackContext context);
     }
 }

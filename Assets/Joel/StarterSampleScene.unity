@@ -351,6 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2fc499727f282141b3d3173e702e07a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Thrust: 0
 --- !u!1 &653260035
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,7 +850,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-16750
+  m_Name: pb_Mesh29968
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
