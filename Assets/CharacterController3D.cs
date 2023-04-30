@@ -35,6 +35,12 @@ public class CharacterController3D : MonoBehaviour
     public GameObject missioncanvas;
     public GameObject deathcanvas;
 
+    //Sound References
+    public AudioSource deathsound;
+    public AudioSource flapsound;
+    public AudioSource acceptmissionsound;
+    public AudioSource completemissionsound;
+
     public float groundDistance = 1.6f;
     public LayerMask groundMask;
 
@@ -94,16 +100,21 @@ public class CharacterController3D : MonoBehaviour
             if (bowerycanvas.activeInHierarchy)
             {
                 bowerycanvas.SetActive(false);
+                acceptmissionsound.Play();
             }
             if (missioncanvas.activeInHierarchy)
             {
                 missioncanvas.SetActive(false);
+                completemissionsound.Play();
             }
+            flapsound.Play();
+            isGrounded = false;
         };
         controls.gameplay.lift.canceled += ctx => lift = 0;
         controls.gameplay.reset.performed += ctx =>
         {
             SetPosition(newPosition, newRotation);
+            isGrounded = false;
         };
         controls.gameplay.yawright.performed += ctx =>
         {
@@ -157,8 +168,6 @@ public class CharacterController3D : MonoBehaviour
  
     void FixedUpdate()
     {
-        
-
         // Angle of Attack based movement
         float angle = GetAngleOfAttack();
         Vector3 forceDirection = transform.forward;
@@ -216,15 +225,17 @@ public class CharacterController3D : MonoBehaviour
         // Set new velocity with clamped speed
         m_Rigidbody.velocity = velocity.normalized * speed;
 
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundDistance);
+        //isGrounded = Physics.Raycast(transform.position, Vector3.down, groundDistance);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        isGrounded = true;
         float relativeVelocity = collision.relativeVelocity.magnitude;
         if (relativeVelocity > 3f)
         {
             SetPosition(newPosition, newRotation);
+            deathsound.Play();
             deathcanvas.SetActive(true);
         }
     }
