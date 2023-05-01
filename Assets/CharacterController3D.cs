@@ -44,6 +44,7 @@ public class CharacterController3D : MonoBehaviour
     public GameObject missioncanvas3;
     public GameObject deathcanvas;
     public Animator myAnim;
+    public ParticleSystem jumpparticles;
 
     //Sound References
     public AudioSource deathsound;
@@ -140,6 +141,7 @@ public class CharacterController3D : MonoBehaviour
                 flapsound.Play();
                 isGrounded = false;
                 myAnim.Play("Jump");
+                jumpparticles.Play();
             }
         };
         controls.gameplay.lift.canceled += ctx => lift = 0;
