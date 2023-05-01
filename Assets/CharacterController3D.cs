@@ -34,6 +34,11 @@ public class CharacterController3D : MonoBehaviour
     [SerializeField] private float rotationSpeed = 1f; // The speed at which the object rotates to the upright position
 
     public GameObject mail;
+    public GameObject hqCanvas1;
+    public GameObject hqPane1;
+    public GameObject hqPane2;
+    public GameObject hqCanvas2;
+    public GameObject hqCanvas3;
     public GameObject boweryTarget;
     public GameObject missiontarget1;
     public GameObject missiontarget2;
@@ -55,6 +60,24 @@ public class CharacterController3D : MonoBehaviour
     public float groundDistance = 1.6f;
     public LayerMask groundMask;
 
+    //signage
+    public GameObject companysign1;
+    public GameObject companysign2;
+
+    //Intro Sequence
+    public bool introSequence;
+    public GameObject introcanvas;
+    public GameObject intropanel1;
+    public GameObject intropanel2;
+    public GameObject intropanel3;
+
+    //Intro Sequence
+    public bool outroSequence;
+    public GameObject outrocanvas;
+    public GameObject outropanel1;
+    public GameObject outropanel2;
+    public GameObject outropanel3;
+
     [SerializeField]
     private bool isGrounded = false;
 
@@ -71,7 +94,9 @@ public class CharacterController3D : MonoBehaviour
 
     void Start()
     {
-        missionProgress = 1;
+        introcanvas.SetActive(true);
+        introSequence = true;
+        missionProgress = 0;
         m_Rigidbody = GetComponent<Rigidbody>();
 
         newPosition = transform.position;
@@ -112,12 +137,39 @@ public class CharacterController3D : MonoBehaviour
         controls.gameplay.lift.performed += ctx =>
         {
             lift = ctx.ReadValue<float>();
-            if (bowerycanvas.activeInHierarchy)
+            if (!flaplock && !introSequence && !outroSequence) //controls frequency of flapping durring play
             {
-                bowerycanvas.SetActive(false);
+                flapsound.Play();
+                isGrounded = false;
+                myAnim.Play("Jump");
+                jumpparticles.Play();
+            }
+            // Missions HQ
+            if (hqCanvas1.activeInHierarchy && !hqPane1.activeInHierarchy && hqPane2.activeInHierarchy) // accept first mission after first time panel
+            {
+                hqCanvas1.SetActive(false);
                 acceptmissionsound.Play();
                 UnfreezePosition();
             }
+            if (hqCanvas1.activeInHierarchy && hqPane1.activeInHierarchy) // first time you visit HQ
+            {
+                hqPane1.SetActive(false);
+                hqPane2.SetActive(true);
+            }
+            if (hqCanvas2.activeInHierarchy)
+            {
+                hqCanvas2.SetActive(false);
+                acceptmissionsound.Play();
+                UnfreezePosition();
+            }
+            if (hqCanvas3.activeInHierarchy)
+            {
+                hqCanvas3.SetActive(false);
+                acceptmissionsound.Play();
+                UnfreezePosition();
+            }
+
+            // Missions Target
             if (missioncanvas1.activeInHierarchy)
             {
                 missioncanvas1.SetActive(false);
@@ -136,13 +188,41 @@ public class CharacterController3D : MonoBehaviour
                 completemissionsound.Play();
                 UnfreezePosition();
             }
-            if (!flaplock)
+            // Intro Sequence
+            if (intropanel1.activeInHierarchy)
             {
-                flapsound.Play();
-                isGrounded = false;
-                myAnim.Play("Jump");
-                jumpparticles.Play();
+                intropanel1.SetActive(false);
             }
+            else if (intropanel2.activeInHierarchy)
+            {
+                intropanel2.SetActive(false);
+            }
+            else if (intropanel3.activeInHierarchy)
+            {
+                intropanel3.SetActive(false);
+                introcanvas.SetActive(false);
+                introSequence = false;
+            }
+
+            // Outro Sequence
+            if (outropanel1.activeInHierarchy)
+            {
+                outropanel1.SetActive(false);
+            }
+            else if (outropanel2.activeInHierarchy)
+            {
+                outropanel2.SetActive(false);
+            }
+            else if (outropanel3.activeInHierarchy)
+            {
+                outropanel3.SetActive(false);
+                outrocanvas.SetActive(false);
+                outroSequence = false;
+                UnfreezePosition();
+                companysign1.SetActive(false);
+                companysign2.SetActive(false);
+            }
+
         };
         controls.gameplay.lift.canceled += ctx => lift = 0;
         controls.gameplay.reset.performed += ctx =>
@@ -235,7 +315,7 @@ public class CharacterController3D : MonoBehaviour
         m_Rigidbody.AddTorque(transform.up * pitchyaw.x * 0.00002f); //yaw
         m_Rigidbody.AddTorque(transform.forward * -tilt.x * 0.00002f * m_Thrust); //roll
         m_Rigidbody.AddTorque(transform.right * tilt.y * 0.00002f * m_Thrust); //pitch
-        if (!flaplock)
+        if (!flaplock && !introSequence && !outroSequence)
         { 
             m_Rigidbody.AddForce(transform.right * slidemove.x * 0.01f * m_Thrust, ForceMode.Impulse); //slide horizontal
             m_Rigidbody.AddForce(transform.up * lift * 0.01f * m_Thrust, ForceMode.Impulse); //Add up lift
@@ -296,26 +376,40 @@ public class CharacterController3D : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        
+        //HQ Collisions
         if (collision.gameObject.name == "TheBowery")
         {
-            mail.SetActive(true);
-            if (missionProgress == 1)
+            if (missionProgress == 0)
             {
                 missiontarget1.SetActive(true);
+                hqCanvas1.SetActive(true);
+                mail.SetActive(true);
+                hqPane1.SetActive(true);
             }
-            else if (missionProgress == 2) 
+            else if (missionProgress == 1) 
             {
                 missiontarget2.SetActive(true);
+                hqCanvas2.SetActive(true);
+                mail.SetActive(true);
             }
-            else if (missionProgress == 3)
+            else if (missionProgress == 2)
             {
                 missiontarget3.SetActive(true);
+                hqCanvas3.SetActive(true);
+                mail.SetActive(true);
+            }else if (missionProgress == 3)
+            {
+                outrocanvas.SetActive(true);
+                boweryTarget.SetActive(false);
+                outroSequence = true;
             }
-            bowerycanvas.SetActive(true);
             FreezePosition();
             boweryTarget.SetActive(false);
             missionProgress++;
+            Debug.Log($"Mission Progress is {missionProgress}");
         }
+        //Mission target collisions
         if (collision.gameObject.name == "MissionTarget1")
         {
             missiontarget1.SetActive(false);
@@ -338,6 +432,7 @@ public class CharacterController3D : MonoBehaviour
             missioncanvas3.SetActive(true);
             mail.SetActive(false);
             FreezePosition();
+            boweryTarget.SetActive(true);
         }
     }
     void SmoothUpturn()
