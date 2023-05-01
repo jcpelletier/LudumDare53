@@ -272,6 +272,7 @@ public class CharacterController3D : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
+        myAnim.Play("Run");
         float relativeVelocity = collision.relativeVelocity.magnitude;
         if (relativeVelocity > 3f)
         {
