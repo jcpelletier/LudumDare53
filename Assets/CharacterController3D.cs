@@ -136,9 +136,10 @@ public class CharacterController3D : MonoBehaviour
         controls.gameplay.look.canceled += ctx => pitchyaw = Vector2.zero;
         controls.gameplay.lift.performed += ctx =>
         {
-            lift = ctx.ReadValue<float>();
-            if (!flaplock && !introSequence && !outroSequence) //controls frequency of flapping durring play
+            //lift = ctx.ReadValue<float>();
+            if (!flaplock && !introSequence && !outroSequence && !hqPane1.activeInHierarchy) //controls frequency of flapping durring play
             {
+                lift = ctx.ReadValue<float>();
                 flapsound.Play();
                 isGrounded = false;
                 myAnim.Play("Jump");
@@ -315,8 +316,9 @@ public class CharacterController3D : MonoBehaviour
         m_Rigidbody.AddTorque(transform.up * pitchyaw.x * 0.00002f); //yaw
         m_Rigidbody.AddTorque(transform.forward * -tilt.x * 0.00002f * m_Thrust); //roll
         m_Rigidbody.AddTorque(transform.right * tilt.y * 0.00002f * m_Thrust); //pitch
-        if (!flaplock && !introSequence && !outroSequence)
+        if (!flaplock && !introSequence && !outroSequence && !hqPane1.activeInHierarchy)
         { 
+            m_Rigidbody.AddForce(transform.right * slidemove.x * 0.01f * m_Thrust, ForceMode.Impulse); //slide horizontal
             m_Rigidbody.AddForce(transform.right * slidemove.x * 0.01f * m_Thrust, ForceMode.Impulse); //slide horizontal
             m_Rigidbody.AddForce(transform.up * lift * 0.01f * m_Thrust, ForceMode.Impulse); //Add up lift
         }
