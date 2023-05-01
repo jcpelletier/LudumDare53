@@ -43,6 +43,7 @@ public class CharacterController3D : MonoBehaviour
     public GameObject missioncanvas2;
     public GameObject missioncanvas3;
     public GameObject deathcanvas;
+    public Animator myAnim;
 
     //Sound References
     public AudioSource deathsound;
@@ -134,8 +135,12 @@ public class CharacterController3D : MonoBehaviour
                 completemissionsound.Play();
                 UnfreezePosition();
             }
-            flapsound.Play();
-            isGrounded = false;
+            if (!flaplock)
+            {
+                flapsound.Play();
+                isGrounded = false;
+                myAnim.Play("Jump");
+            }
         };
         controls.gameplay.lift.canceled += ctx => lift = 0;
         controls.gameplay.reset.performed += ctx =>
@@ -153,13 +158,6 @@ public class CharacterController3D : MonoBehaviour
             pitchyaw.x = -ctx.ReadValue<float>();
         };
         controls.gameplay.yawleft.canceled += ctx => pitchyaw.x = 0;
-
-        //controls.gameplay.tilt.performed += ctx => tilt = ctx.ReadValue<float>();
-        //controls.gameplay.tilt.canceled += ctx => tilt = 0;
-        //controls.gameplay.RollLeft.performed += ctx => rollleft = ctx.ReadValue<float>();
-        //controls.gameplay.RollLeft.canceled += ctx => rollleft = 0;
-        //controls.gameplay.Brake.performed += ctx => drag = ctx.ReadValue<float>();
-        //controls.gameplay.Brake.canceled += ctx => drag = 0;
     }
 
     private void OnEnable()
@@ -198,7 +196,7 @@ public class CharacterController3D : MonoBehaviour
         // Get the rotation angles of the target GameObject
         Vector3 rotationAngles = gameObject.transform.eulerAngles;
         //Debug.Log($"Checking X:{rotationAngles.x} Z:{rotationAngles.z}");
-        // Check if the GameObject has been rotated 90 degrees or more around 2 axis
+        // Check if the GameObject has been rotated 88 degrees or more around 2 axis
         if ((Mathf.Abs(rotationAngles.x) >= 88 && Mathf.Abs(rotationAngles.x) <= 272) || (Mathf.Abs(rotationAngles.z) >= 88 && Mathf.Abs(rotationAngles.z) <= 272))
         {
             //Debug.Log($"The GameObject is rotated 88 degrees or more. X:{rotationAngles.x} Z:{rotationAngles.z}");
@@ -285,7 +283,6 @@ public class CharacterController3D : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        
         if (collision.gameObject.name == "TheBowery")
         {
             mail.SetActive(true);
@@ -328,7 +325,6 @@ public class CharacterController3D : MonoBehaviour
             missioncanvas3.SetActive(true);
             mail.SetActive(false);
             FreezePosition();
-            boweryTarget.SetActive(true);
         }
     }
     void SmoothUpturn()
