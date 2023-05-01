@@ -269,12 +269,22 @@ public class CharacterController3D : MonoBehaviour
                 isGrounded = false;
             }
         }
+
+        if (isGrounded && (m_Rigidbody.velocity.magnitude <= 0.001))
+        {
+            myAnim.Play("Sit");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (m_Rigidbody.velocity.magnitude > 0.001)
+        {
+            myAnim.Play("Run");
+        }
+        
         isGrounded = true;
-        myAnim.Play("Run");
+        
         float relativeVelocity = collision.relativeVelocity.magnitude;
         if (relativeVelocity > 3f)
         {
