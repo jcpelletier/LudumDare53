@@ -48,6 +48,7 @@ public class CharacterController3D : MonoBehaviour
     public GameObject missioncanvas2;
     public GameObject missioncanvas3;
     public GameObject deathcanvas;
+    public GameObject creditscanvas;
     public Animator myAnim;
     public ParticleSystem jumpparticles;
 
@@ -232,6 +233,7 @@ public class CharacterController3D : MonoBehaviour
                 companysign2.SetActive(false);
                 outromusic.Stop();
                 postmusic.Play();
+                creditscanvas.SetActive(true);
             }
 
         };

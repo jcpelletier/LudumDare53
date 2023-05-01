@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HalfLife : MonoBehaviour
 {
-    int count = 150;
+    public int count = 350;
 
     private void OnEnable()
     {
