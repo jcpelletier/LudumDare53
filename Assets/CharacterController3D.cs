@@ -57,6 +57,12 @@ public class CharacterController3D : MonoBehaviour
     public AudioSource acceptmissionsound;
     public AudioSource completemissionsound;
 
+    //Music References
+    public AudioSource intromusic;
+    public AudioSource generalmusic;
+    public AudioSource outromusic;
+    public AudioSource postmusic;
+
     public float groundDistance = 1.6f;
     public LayerMask groundMask;
 
@@ -203,6 +209,8 @@ public class CharacterController3D : MonoBehaviour
                 intropanel3.SetActive(false);
                 introcanvas.SetActive(false);
                 introSequence = false;
+                intromusic.Stop();
+                generalmusic.Play();
             }
 
             // Outro Sequence
@@ -222,6 +230,8 @@ public class CharacterController3D : MonoBehaviour
                 UnfreezePosition();
                 companysign1.SetActive(false);
                 companysign2.SetActive(false);
+                outromusic.Stop();
+                postmusic.Play();
             }
 
         };
@@ -405,6 +415,8 @@ public class CharacterController3D : MonoBehaviour
                 outrocanvas.SetActive(true);
                 boweryTarget.SetActive(false);
                 outroSequence = true;
+                generalmusic.Stop();
+                outromusic.Play();
             }
             FreezePosition();
             boweryTarget.SetActive(false);
