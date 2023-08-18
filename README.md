@@ -18,3 +18,4 @@ Accept delivery jobs from HQ and deliver them to their destinations around the c
 To fly flap to gain altitude. Tilt forward gently at first and flap occasionally to gain velocity. Level off to slow down.
 
 Enjoy playing Pigeon Parcel!
+![Pigeon Parcel Gameplay](https://static.jam.host/raw/b00/e/z/599e7.png)
